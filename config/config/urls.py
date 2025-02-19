@@ -15,8 +15,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
+class HelloWorldView(APIView):
+    # authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated,]
+    def get(self, request):
+        return Response({"message": "Hello, world!"})
+    
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
+    path('', HelloWorldView.as_view()),
 ]
